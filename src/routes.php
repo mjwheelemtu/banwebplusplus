@@ -57,3 +57,12 @@ $app->get('/getCourseInfoForCalendar/{crn}/{courseNum}', function(Request $reque
 $app->get('/search/', function(Request $request, Response $response, $args) {
 	echo "Please enter search query";
 });
+
+$app->post('/verifyIdToken', function(Request $request, Response $response) {
+	$idToken = $request->getParsedBody()['idtoken'];
+	$email = $request->getParsedBody()['email'];
+	$name = $request->getParsedBody()['name'];
+	$userMapper = new UserMapper($this->db);
+	$result = $userMapper->verifyIdToken($idToken, $email, $name);
+	return $result;
+});

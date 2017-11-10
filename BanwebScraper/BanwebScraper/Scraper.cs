@@ -118,7 +118,7 @@ namespace BanwebScraper
                     PushAllSectionInfo();
                     Console.Write($"[{DateTime.Now:s}]  -  Waiting for next run, press <Enter> to quit ");
                     sw.Stop();
-                    if (WaitForInput(3600000 - (int) sw.ElapsedMilliseconds)) return;
+                    if (WaitForInput(600000 - (int) sw.ElapsedMilliseconds)) return;
                     Console.WriteLine();
                     sw.Restart();
                 }
@@ -280,14 +280,18 @@ namespace BanwebScraper
                     if (i <= 10) continue;
                     switch (nodes[i].Name)
                     {
-                        case "br" when nodes[i - 1].Name == "br":
-                            resultRow.RemoveAt(resultRow.Count - 1);
-                            resultSet.Add(resultRow);
-                            resultRow = new List<string>();
-                            break;
                         case "br":
-                            resultRow.Add(resultString.Trim('\n', ' '));
-                            resultString = string.Empty;
+                            if (nodes[i - 1].Name == "br")
+                            {
+                                resultRow.RemoveAt(resultRow.Count - 1);
+                                resultSet.Add(resultRow);
+                                resultRow = new List<string>();
+                            }
+                            else
+                            {
+                                resultRow.Add(resultString.Trim('\n', ' '));
+                                resultString = string.Empty;
+                            }
                             break;
                         case "A":
                         case "hr":
